@@ -1,0 +1,35 @@
+Title
+
+  mail2entry
+
+Copyright
+
+  2002 Neoteny Co. Ltd.
+
+Description
+
+  Code to enable posting of entries to MT via mail messages.
+
+Limits
+
+  -Only works w/ MT -- though it may not be too hard to adopt it to handle
+   some other blogs.
+
+  -Only handles mail messages of a certain form -- in particular if a mail
+   message does not contain an image, an entry will not be created.  Note
+   that only JPEGs are handled currently.
+
+  -Only supports posting for a single user.
+
+  -Does not support specification of category.
+
+  -If a 3rd party determines the email address associated w/ creating
+   entries, the 3rd party can create entries too.  I.e. obscurity of
+   an email address is the only protection from posting via mail by
+   unintended 3rd parties.
+
+Docs
+
+  INSTALL contains information on installation and configuration.
+
+  COPYING contains licensing information.

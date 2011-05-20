@@ -1,0 +1,117 @@
+Warning
+
+  This is a first attempt -- there are some things missing, but someone w/
+  appropriate UNIX experience should be able to succeed in installation
+  and configuration.    I may update the instructions as I get feedback.
+
+Prerequisites
+
+  The ability to read English and follow simple instructions.
+
+  A host connected to the Internet which can receive email [1] and:
+
+    Python >= 2.2.2
+    MT
+      enabled w/ the XML-RPC interface
+      a blog (determine your blog id)
+      a blog user, the associated password [2]
+
+  Please note that this code was designed to run on the host which
+  the blog itself is running on.  Other configurations may be possible, but
+  I don't recommend them and don't plan on supporting them at the moment.
+
+Installation
+
+  Obtain the source and unpack/untar into some directory.
+
+  That's it for installation.  No compilation necessary.
+
+Configuration
+
+  In order to post via email, we need an email address to post to, so:
+
+  1) Decide on an email address for posting.
+
+  In order to post to a blog, we need to know which blog to post to,
+  what user to post w/, the password for this user [2], and the URI of the 
+  XML-RPC interface for the blog, so:
+
+  2) Determine the following:
+
+       blog id
+       blog user
+       blog user's password   
+       URI of XML-RPC interface for the blog 
+
+  The code for this system needs this information.  We will store it
+  in a file named "settings.py".  This file has to live somewhere, so:
+
+  3) Create a directory (the name does not matter)
+
+  We now have somewhere to put the aforementioned file.  The code comes
+  w/ a sample file so:
+
+  4) Copy the sample settings.py file to the newly created directory
+
+  The file is still only a sample, so it will need to be modified.
+  There are some other things to configure in settings.py, but
+  they should be self-explanatory.  All values are currently necessary
+  so be sure to choose appropriate values.  Now:
+
+  5) Edit settings.py appropriately
+
+  Please test your set up so far by piping an appropriate message to
+  the code.  An example test invocation might be:
+
+    cat my-appropriate-message | python /path/to/mail2entry.py directory-name
+
+  Note that only certain types of messages are handled.  See README for
+  some details -- you may of course, "Use the Source" as well.
+
+  Sending a message to the address decided on in 1) will not work yet as
+  we haven't configured the system appropriately.  As part of that
+  configuration, we'll need to tell the system how to invoke the code.  
+
+  Invocation is simple -- pass the name of the directory created in 3) as the 
+  first argument.  Alternatively, invoking the code w/ no arguments should
+  display a usage message.
+
+  Now:
+
+  6) Configure your system [3] to accept mail at the address decided on in
+     1) and arrange for messages to this address to be sent to the code.
+
+  It's likely that having got this far, you'll want a working system, so
+  I suggest the following:
+
+  7) Test the set-up by sending an appropriate message to the address decided
+     on in 1)
+
+  That's it.
+
+Footnotes
+
+[1] This system has only been tested w/ sendmail, but it ought to
+    work w/ other MTAs.  N.B. I don't recommend sendmail and don't intend
+    to answer questions about it.
+
+    You need to be able to arrange for your system to accept email for
+    a certain email address and perform configurations so that messages to 
+    the address are passed on to this code.  Some MTAs do not appear to be 
+    designed to allow non-root users to perform this type of configuration.
+
+[2] Due to the nature of the XML-RPC APIs for blogs available at the
+    time of development, the password of the posting user must be
+    stored in raw form in a file.  Sad, I know.  If your blog system
+    allows it, I recommend creating a separate user for purposes of
+    using this code -- standard precautions about choosing a good password
+    and changing it regularly apply.
+
+[3] How to do this depends on the MTA your system is running.  Suffice it
+    to say that for sendmail there is likely to be editing of /etc/aliases
+    followed by running the newaliases command and tuning the mode and   
+    permissions of the relevant files.  If you don't know how to do this, I 
+    recommend communicating w/ MTA folks about it.  Please don't ask me.  
+    I'll also say that I've found doing this type of thing w/ qmail  
+    is easier (-;
+
