@@ -1,12 +1,55 @@
-#! /usr/bin/env python
+#! /usr/bin/env python2.2
 
 """Post a new MT entry from a mail message"""
 
-import sys, os, time
+import sys
+assert(sys.hexversion >= 0x02020000) # Require Python 2.2 or higher.
+
+import os
+import time
+import stat
 import traceback
 
 def main():
     """"""
+
+    try:
+        import parsemsg
+        import postentry
+        import saveimage
+
+        content = parsemsg.parse(sys.stdin)
+
+        images = content.getImages()
+        if images :
+            imageurls = saveimage.save ( images )
+            imagecontent = map ( lambda imageurl : imgtemplate % \
+                                 { 'imageurl' : imageurl }, imageurls )
+        else :
+            imagecontent = u''
+
+        entry = template % { 'caption' : content.getDescription(),
+                             'imagecontent' : "\n".join(imagecontent) }
+        content.setEntry(entry)
+
+        result = postentry.post(content)
+    except:
+        lfo = open(logfilepath, "a")
+        lfo.write(time.strftime("%Y-%m-%d %H:%M\n\n"))
+        traceback.print_exception(sys.exc_info()[0], sys.exc_info()[1], \
+                                  sys.exc_info()[2], 100, lfo)
+        lfo.write("--------------------------------------------------------\n")
+        lfo.close()
+
+        result = None
+
+    return result
+
+def usage():
+    """"""
+    print "mail2entry.py profile-directory"
+
+if __name__ == "__main__":
     # finding and loading things from settings.py
     if len(sys.argv) > 0:
         settings_path = sys.argv[1]
@@ -21,30 +64,4 @@ def main():
         usage()
         sys.exit(1)
 
-    try:
-        import parsemsg
-        import postentry
-
-        content, imagefilename = parsemsg.parse(sys.stdin)
-
-        content['description'] = template % \
-                                 {'caption': content['description'], \
-                                  'imagefilename': imagefilename}
-
-        result = postentry.post(content)
-    except:
-        lfo = open(logfilepath, "a")
-        lfo.write(time.strftime("%Y-%m-%d %H:%M\n\n"))
-        traceback.print_exception(sys.exc_info()[0], sys.exc_info()[1], \
-                                  sys.exc_info()[2], 100, lfo)
-        lfo.write("--------------------------------------------------------\n")
-        lfo.close()
-
-    return result
-
-def usage():
-    """"""
-    print "mail2entry.py profile-directory"
-
-if __name__ == "__main__":
     main()
