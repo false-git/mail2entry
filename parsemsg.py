@@ -1,12 +1,14 @@
-#! /usr/bin/env python2.2
+#! /usr/bin/env python
 
 """Parse a mail message"""
 
 from email import *
 from email.Header import *
+from settings import *
 import types
 import re
 
+class IllegalUser(Exception): pass
 class ParseMsgError(Exception): pass
 class ImageTypeNotAllowed(ParseMsgError): pass
 class UnexpectedMimeType(ParseMsgError): pass
@@ -22,6 +24,7 @@ ImageType = re.compile("^image$",re.IGNORECASE)
 class messageContent :
     def __init__ ( this, title ) :
         this.__title = title
+        this.__from = u''
         this.__description = u''
         this.__entry = u''
         this.__images = []
@@ -36,11 +39,16 @@ class messageContent :
         return this.__images
     def addImage(this,image) :
         this.__images.append(image)
+    def setFrom(this,mailfrom) :
+        this.__from = mailfrom
     def getEntry(this) :
         return this.__entry
     def setEntry(this,entry) :
         this.__entry = entry
     def check(this) :
+        if this.__from != allowmailfrom and this.__from != allowmailfrom2:
+            raise IllegalUser
+
         if not this.__description :
             raise BodyEmpty
         if type(this.__description) is not types.UnicodeType :
@@ -59,12 +67,14 @@ def parse(fileObject):
 
     msg = message_from_file(fileObject)
     subject = msg['Subject']
+    mailfrom = msg['From']
     results = decode_header(subject)
 
     title = " ".join([unicodify(decoded_subject, charset) \
                       for decoded_subject, charset in results])
 
     content = messageContent(title)
+    content.setFrom(mailfrom)
     parseMultiPart(msg,content)
 
     return content
@@ -121,7 +131,7 @@ def unicodify(string, charset):
     if charset:
         charset = charset.lower()
         if charset == 'iso-2022-jp':
-            result = unicode(string, "japanese.iso-2022-jp")
+            result = unicode(string, "iso-2022-jp")
         elif charset == 'us-ascii':
             result = unicode(string, "us-ascii")
         elif charset == 'iso-8859-1':
@@ -129,6 +139,6 @@ def unicodify(string, charset):
         else:
             result = ""
     else:
-        result = unicode(string, "us-ascii")
+        result = unicode(string, "iso-2022-jp")
 
     return result

@@ -1,4 +1,4 @@
-#! /usr/bin/env python2.2
+#! /usr/bin/env python
 
 """Post a new MT entry from a mail message"""
 
@@ -24,7 +24,7 @@ def main():
         if images :
             imageurls = saveimage.save ( images )
             imagecontent = map ( lambda imageurl : imgtemplate % \
-                                 { 'imageurl' : imageurl }, imageurls )
+                                 { 'imageurl' : imageurl[0], 'thumburl' : imageurl[1] }, imageurls )
         else :
             imagecontent = u''
 
