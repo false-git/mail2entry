@@ -3,5 +3,15 @@ mail2entryの勝手改造です。
 オリジナルは
 http://joi.ito.com/jp/archives/2002/12/26/002656.html
 にあります。
+ここでのベースは、
+http://www.gweep.net/~aron/mail2entry/
+です。
+
+オリジナルが
+https://github.com/false-git/mail2entry/tree/088e79b45a615a38dca3cc28c0459ecf0f7124a5
+ベースが
+https://github.com/false-git/mail2entry/tree/a3702232fe69510ce0cc4d8b7c68a58c18474b1d
+で参照できます。
+
 
 配布物に入っていた元のREADMEは、README.origにリネームしてあります。
